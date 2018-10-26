@@ -1,8 +1,25 @@
-name := "KarstenBot"
+// import Dependencies._
 
-version := "0.1"
+lazy val commonSettings = List(
+  organization := "com.snapcardster",
+  scalaVersion := "2.12.7",
+  version := "0.1"
+)
 
-scalaVersion := "2.12.7"
+lazy val root = (project in file(".")).
+  settings(
+    //  assemblySettings : _*,
+    inThisBuild(commonSettings),
+    mainClass in assembly := Some("karstenbot.Program"),
+    assemblyJarName in assembly := "karstenbot.jar",
+    assemblyMergeStrategy in assembly := {
+      case PathList("META-INF", xs@_*) => MergeStrategy.discard
+      case x => MergeStrategy.first
+    },
+    name := "KarstenBot"
+  )
+
+
 // Core with minimal dependencies, enough to spawn your first bot.
 libraryDependencies += "com.bot4s" %% "telegram-core" % "4.0.0-RC2"
 

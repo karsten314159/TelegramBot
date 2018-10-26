@@ -8,8 +8,9 @@ class Program {}
 object Program extends App {
   val googleKey = Secret.googleKey
   val tok = Secret.telegramToken
+  val cx = Secret.cx
 
-  val bot = new RandomBot(tok, googleKey)
+  val bot = new KarstenBot(tok, googleKey, cx)
   val eol = bot.run()
   println("Started :)")
   println("https://telegram.me/karsten314159bot")
