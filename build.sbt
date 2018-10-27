@@ -25,3 +25,6 @@ libraryDependencies += "com.bot4s" %% "telegram-core" % "4.0.0-RC2"
 
 // Extra goodies: Webhooks, support for games, bindings for actors.
 libraryDependencies += "com.bot4s" %% "telegram-akka" % "4.0.0-RC2"
+
+// mysql
+libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.12"
