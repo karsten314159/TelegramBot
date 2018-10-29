@@ -16,7 +16,7 @@ class Tests extends Specification with Matchers {
       "str" should startingWith("s")
     }
    Fail: ${
-      "t" should startingWith("s")
+      //"t" should startingWith("s")
     }
    Google: ${
       val res = new GoogleCustom(SecretTrait.impl).google("matrix movie")
