@@ -13,7 +13,7 @@ import scala.util.matching.Regex
 object CardLoader {
   val url = "https://en.wikipedia.org/w/api.php?action=parse&page=List_of_serial_killers_by_number_of_victims&format=json"
 
-  def main(args: Array[String]): Unit = {
+  def main2(args: Array[String]): Unit = {
     val x = Source.fromURL(url).mkString
     WikiRes.c.reads(Json.parse(x)) match {
       case JsSuccess(x, _) =>

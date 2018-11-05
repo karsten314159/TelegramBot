@@ -19,7 +19,6 @@ lazy val root = (project in file(".")).
     name := "KarstenBot"
   )
 
-
 // Core with minimal dependencies, enough to spawn your first bot.
 libraryDependencies += "com.bot4s" %% "telegram-core" % "4.0.0-RC2"
 

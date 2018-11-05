@@ -17,10 +17,12 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
 
   val start: String = "/start"
 
-  /*if (!new Database(sec).test) {
-    sys.error("DB not accessible: " + new Database(sec).url)
+  val db = new Database(sec)
+  if (!db.test) {
+    sys.error("DB not accessible: " + db.url)
   }
 
+  /*
   def actionOn(implicit msg: Message): Future[Message] = {
     val str = msg.text.getOrElse("")
     println("Got message from " + msg.chat.username.getOrElse("") + " (" + msg.chat.firstName.getOrElse("") + "): " + str)
@@ -85,6 +87,14 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
   val locations = new ConcurrentHashMap[String, Long]()
 
   def process(text: String)(implicit msg: Message): (String, Seq[String]) = {
+    val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
+    val stm = db.connect.prepareStatement(str)
+    stm.setString(1, msg.chat.firstName.orNull)
+    stm.setString(2, msg.chat.username.orNull)
+    stm.setString(3, text)
+    stm.setLong(4, System.currentTimeMillis)
+    stm.executeUpdate
+
     val user = msg.chat.username.getOrElse("")
     val old =
       if (locations.contains(user)) {
