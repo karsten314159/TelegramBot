@@ -28,8 +28,14 @@ libraryDependencies += "com.bot4s" %% "telegram-akka" % "4.0.0-RC2"
 // mysql
 libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.12"
 
+// tests
 libraryDependencies += "org.specs2" %% "specs2-core" % "4.3.4" % "test"
 
+// html
 libraryDependencies += "org.jsoup" % "jsoup" % "1.11.3"
 
+// json
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.10"
+
+// svg
+libraryDependencies += "org.apache.xmlgraphics" % "batik-transcoder" % "1.7"

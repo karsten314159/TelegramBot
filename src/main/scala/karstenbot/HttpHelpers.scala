@@ -28,6 +28,9 @@ object HttpHelpers {
   }
 
   def error[T](x: Any): Try[T] = {
-    error(new IllegalArgumentException("Illegal: " + x): Throwable)
+    val msg = "Illegal: " + x
+    val t = new IllegalArgumentException(msg)
+    t.printStackTrace()
+    error(t: Throwable)
   }
 }
