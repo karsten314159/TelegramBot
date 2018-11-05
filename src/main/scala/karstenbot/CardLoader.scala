@@ -91,18 +91,18 @@ object CardLoader {
               val nameWithoutYear = nameWithYear.substring(0, if (idx == -1) nameWithYear.length - 1 else idx)
               val triedString = new GoogleCustom(SecretTrait.impl).google(nameWithoutYear)
               val img = triedString.toOption
-              if (img.isDefined) {
-                cards += CardData(
-                  nameWithoutYear,
-                  "Chemist",
-                  "",
-                  Try(parts(2)).toOption.getOrElse(""),
-                  Try(parts(3)).toOption.getOrElse(""),
-                  "",
-                  img.getOrElse("https://pharm.ucsf.edu/sites/pharm.ucsf.edu/files/styles/lab_half/public/RS16062_MSS2011_23_photo_prints_classrooms_labs_14_095%20sepia%201x1.jpg?itok=X4tFpPEE"),
-                  Try(parts(1)).toOption.getOrElse("")
-                )
-              }
+              //if (img.isDefined) {
+              cards += CardData(
+                nameWithoutYear,
+                "Chemist",
+                "",
+                Try(parts(2)).toOption.getOrElse(""),
+                Try(parts(3)).toOption.getOrElse(""),
+                "",
+                img.getOrElse("https://pharm.ucsf.edu/sites/pharm.ucsf.edu/files/styles/lab_half/public/RS16062_MSS2011_23_photo_prints_classrooms_labs_14_095%20sepia%201x1.jpg?itok=X4tFpPEE"),
+                Try(parts(1)).toOption.getOrElse("")
+              )
+              //}
             }
           }
         }
