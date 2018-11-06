@@ -6,6 +6,7 @@ import scala.collection.mutable.ListBuffer
 
 class Database(val s: SecretTrait) {
   def connect: Connection = {
+    Class.forName("com.mysql.cj.jdbc.Driver").newInstance
     DriverManager.getConnection(url, s.dbUser, s.dbPw)
   }
 

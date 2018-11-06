@@ -38,4 +38,5 @@ libraryDependencies += "org.jsoup" % "jsoup" % "1.11.3"
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.10"
 
 // svg
-libraryDependencies += "org.apache.xmlgraphics" % "batik-transcoder" % "1.7"
+libraryDependencies += "org.apache.xmlgraphics" % "batik-transcoder" % "1.9"
+libraryDependencies += "org.apache.xmlgraphics" % "batik-codec" % "1.9"

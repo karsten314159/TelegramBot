@@ -1,15 +1,17 @@
 package karstenbot
 
-import java.io.{BufferedWriter, File, FileWriter}
+import java.io._
 import java.nio.file._
 
+import org.apache.batik.transcoder.image.PNGTranscoder
+import org.apache.batik.transcoder.{SVGAbstractTranscoder, TranscoderInput, TranscoderOutput}
 import org.jsoup.Jsoup
 import play.api.libs.json._
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
-import scala.util.Try
 import scala.util.matching.Regex
+import scala.util.{Failure, Try}
 
 object CardLoader {
 
@@ -17,8 +19,8 @@ object CardLoader {
 
   def killers: List[CardData] = {
     val url = wikiApi + "List_of_serial_killers_by_number_of_victims"
-    val x = Source.fromURL(url).mkString
-    WikiRes.c.reads(Json.parse(x)) match {
+    val jsonString = Source.fromURL(url).mkString
+    WikiRes.c.reads(Json.parse(jsonString)) match {
       case JsSuccess(x, _) =>
         //println(x)
         val doc = Jsoup.parse(x.parse.text.`*`)
@@ -39,7 +41,7 @@ object CardLoader {
               //reg.findAllIn(note).group(1)
               val card = Killer(
                 Nickname = n,
-                Name = item(0),
+                Name = item.head,
                 Country = item(1),
                 YearsActive = item(2),
                 ProvenVictims = item(3),
@@ -63,7 +65,8 @@ object CardLoader {
             Stamp = c.YearsActive.trim,
             ArtistName = c.Country.trim,
             ImageHref = img.getOrElse("https://cdn.cnn.com/cnnnext/dam/assets/180306160531-unmasking-a-killer-2-00000000-large-169.jpg"),
-            Description = c.Notes.substring(0, c.Notes.length.min(20)).trim
+            Description1 = c.Notes.substring(0, c.Notes.length.min(20)).trim,
+            Description2 = ""
           )
           con
         }.toList
@@ -75,32 +78,36 @@ object CardLoader {
 
   def chemists: List[CardData] = {
     val url = wikiApi + "List_of_chemists"
-    val x = Source.fromURL(url).mkString
-    WikiRes.c.reads(Json.parse(x)) match {
+    val jsonString = Source.fromURL(url).mkString
+    WikiRes.c.reads(Json.parse(jsonString)) match {
       case JsSuccess(x, _) =>
         println(x)
         val doc = Jsoup.parse(x.parse.text.`*`)
         val cards = ListBuffer[CardData]()
         doc.getElementsByTag("li").spliterator.forEachRemaining { li =>
           // TODO: remove
-          if (cards.length < 10) {
+          if (true) {
             val parts = li.text.split(",")
             if (parts.length > 2) {
               val nameWithYear = parts(0)
               val idx = nameWithYear.indexOf(" (")
               val nameWithoutYear = nameWithYear.substring(0, if (idx == -1) nameWithYear.length - 1 else idx)
-              val triedString = new GoogleCustom(SecretTrait.impl).google(nameWithoutYear)
+              val triedString = Failure(null) // new GoogleCustom(SecretTrait.impl).google(nameWithoutYear)
               val img = triedString.toOption
               //if (img.isDefined) {
+              val imgStdUrl = "https://pharm.ucsf.edu/sites/pharm.ucsf.edu/files/styles/lab_half/public/RS16062_MSS2011_23_photo_prints_classrooms_labs_14_095%20sepia%201x1.jpg?itok=X4tFpPEE"
+              val img2 = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
+              val descText = parts.drop(1).mkString(" ")
+              val (desc1, desc2) = format(descText)
               cards += CardData(
                 nameWithoutYear,
                 "Chemist",
+                descText.length + "",
+                nameWithoutYear.length + "",
                 "",
-                Try(parts(2)).toOption.getOrElse(""),
-                Try(parts(3)).toOption.getOrElse(""),
-                "",
-                img.getOrElse("https://pharm.ucsf.edu/sites/pharm.ucsf.edu/files/styles/lab_half/public/RS16062_MSS2011_23_photo_prints_classrooms_labs_14_095%20sepia%201x1.jpg?itok=X4tFpPEE"),
-                Try(parts(1)).toOption.getOrElse("")
+                "Wikipedia",
+                img.getOrElse(imgStdUrl),
+                desc1, desc2
               )
               //}
             }
@@ -114,8 +121,36 @@ object CardLoader {
     }
   }
 
+  private def format(descText: String): (String, String) = {
+    val strings2 = descText.split(" ")
+    val strings = strings2.grouped(7).map(x => x.mkString(" ")).toList
+    strings.head -> strings.drop(1).headOption.map(x => x + "...").getOrElse("")
+  }
+
+  def renderSvgToBmp(con: String): Array[Byte] = {
+    // Create a PNG transcoder
+    val transcoder = new PNGTranscoder
+
+    transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, 2 * 408f)
+    transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 2 * 569f)
+
+    // Create the transcoder input
+    val input = new TranscoderInput(new StringReader(con))
+    // Create the transcoder output
+    val ostream = new ByteArrayOutputStream
+    val output = new TranscoderOutput(ostream)
+
+    // Transform the svg document into a PNG image
+    transcoder.transcode(input, output)
+
+    // Flush and close the stream
+    ostream.flush()
+    ostream.close()
+    ostream.toByteArray
+  }
+
   //https:// https://en.wikipedia.org/wiki/Lists_of_mathematicians https://en.wikipedia.org/wiki/List_of_chemists https://en.wikipedia.org/wiki/List_of_physicists
-  def main2(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
     val items = chemists
 
     val cwd = new File("").getAbsolutePath
@@ -127,7 +162,8 @@ object CardLoader {
     val svgTemplate = Source.fromFile(cardSvg).mkString
 
     println(new String(items.map(_ => '_').toArray))
-    for (c <- items) {
+    var len = items.length
+    for ((c, i) <- items.zipWithIndex) {
       print(".")
       val con = svgTemplate
         .replace("$CardName", c.CardName)
@@ -137,9 +173,20 @@ object CardLoader {
         .replace("$Stamp", c.Stamp)
         .replace("$ArtistName", c.ArtistName)
         .replace("$ImageHref", c.ImageHref)
-        .replace("$Description", c.Description)
-      val path: Path = Paths.get(res + c.CardName.toLowerCase.replaceAll("[^a-z ]", "") + ".svg")
-      val b = new BufferedWriter(new FileWriter(path.toFile))
+        .replace("$Description1", c.Description1)
+        .replace("$Description2", c.Description2)
+        .replace("$Number", i + "/" + len)
+
+      val arr = renderSvgToBmp(con)
+
+      val ext = "png"
+      val baseFile = res + c.CardName.toLowerCase.replaceAll("[^a-z ]", "")
+      //"svg"
+      val path: Path = Paths.get(baseFile + "." + ext)
+      Files.write(path, arr, StandardOpenOption.CREATE)
+
+      val path2: Path = Paths.get(baseFile + "." + "svg")
+      val b = new BufferedWriter(new FileWriter(path2.toFile))
       b.write(con, 0, con.length)
       b.close()
     }
@@ -180,5 +227,6 @@ case class CardData(
                      Stamp: String,
                      ArtistName: String,
                      ImageHref: String,
-                     Description: String
+                     Description1: String,
+                     Description2: String
                    )
