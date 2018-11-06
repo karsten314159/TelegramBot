@@ -115,7 +115,7 @@ object CardLoader {
   }
 
   //https:// https://en.wikipedia.org/wiki/Lists_of_mathematicians https://en.wikipedia.org/wiki/List_of_chemists https://en.wikipedia.org/wiki/List_of_physicists
-  def main(args: Array[String]): Unit = {
+  def main2(args: Array[String]): Unit = {
     val items = chemists
 
     val cwd = new File("").getAbsolutePath
