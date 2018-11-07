@@ -10,8 +10,8 @@ import play.api.libs.json._
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
+import scala.util.Failure
 import scala.util.matching.Regex
-import scala.util.{Failure, Try}
 
 object CardLoader {
 
@@ -127,12 +127,14 @@ object CardLoader {
     strings.head -> strings.drop(1).headOption.map(x => x + "...").getOrElse("")
   }
 
+  // http://www.svgopen.org/2002/papers/kormann__developing_svg_apps_with_batik
   def renderSvgToBmp(con: String): Array[Byte] = {
     // Create a PNG transcoder
     val transcoder = new PNGTranscoder
 
-    transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, 2 * 408f)
-    transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 2 * 569f)
+    val fac = 1
+    transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, fac * 408f)
+    transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, fac * 569f)
 
     // Create the transcoder input
     val input = new TranscoderInput(new StringReader(con))
@@ -150,23 +152,31 @@ object CardLoader {
   }
 
   //https:// https://en.wikipedia.org/wiki/Lists_of_mathematicians https://en.wikipedia.org/wiki/List_of_chemists https://en.wikipedia.org/wiki/List_of_physicists
-  def main(args: Array[String]): Unit = {
-    val items = chemists
+  def main2(args: Array[String]): Unit = {
+    generateCardImage("Name")
+  }
 
-    val cwd = new File("").getAbsolutePath
-    val folder = cwd
+  def generateCardImage(name: String): Array[Byte] = {
+    //val items = chemists.take(3)
+    val folder = new File("").getAbsolutePath
     val cardSvg = folder + "/card.svg"
     val res = folder + "/output/"
     println(cardSvg)
 
     val svgTemplate = Source.fromFile(cardSvg).mkString
 
-    println(new String(items.map(_ => '_').toArray))
-    var len = items.length
-    for ((c, i) <- items.zipWithIndex) {
+    val items = List(name)
+    //println(new String(items.map(_ => '_').toArray))
+    println("generating image")
+    val len = items.length
+    var arr = Array(0: Byte)
+    for ((namedItem, i) <- items.zipWithIndex) {
+      val seed = namedItem.map(_.toInt).sum //fold(0)((a, b) => a + b)
+      val gen = CardGen.generate("c_" + seed)
+      val c = gen.copy(CardName = namedItem)
       print(".")
       val con = svgTemplate
-        .replace("$CardName", c.CardName)
+        .replace("$CardName", c.CardName) // Auf "&" in der Entityreferenz muss umgehend der Entityname folgen.
         .replace("$CardType", c.CardType)
         .replace("$Field", c.Field)
         .replace("$Costs", c.Costs)
@@ -177,21 +187,24 @@ object CardLoader {
         .replace("$Description2", c.Description2)
         .replace("$Number", i + "/" + len)
 
-      val arr = renderSvgToBmp(con)
+      arr = renderSvgToBmp(con)
+      println("done")
 
       val ext = "png"
       val baseFile = res + c.CardName.toLowerCase.replaceAll("[^a-z ]", "")
       //"svg"
       val path: Path = Paths.get(baseFile + "." + ext)
       Files.write(path, arr, StandardOpenOption.CREATE)
-
+      /*
       val path2: Path = Paths.get(baseFile + "." + "svg")
       val b = new BufferedWriter(new FileWriter(path2.toFile))
       b.write(con, 0, con.length)
       b.close()
+      */
     }
-    println("")
-    println("Done with " + items.length + " items")
+    /*println("")
+    println("Done with " + items.length + " items")*/
+    arr
   }
 }
 

@@ -1,11 +1,14 @@
 package karstenbot
 
+import java.net.URL
+import java.util.Base64
 import java.util.concurrent.ConcurrentHashMap
 
 import com.bot4s.telegram.api.declarative.Commands
 import com.bot4s.telegram.api.{Polling, TelegramBot}
 import com.bot4s.telegram.clients.ScalajHttpClient
 import com.bot4s.telegram.models._
+import scalaj.http.{Http, HttpOptions}
 
 import scala.util.{Failure, Random, Success, Try}
 
@@ -65,6 +68,45 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
     reply("You cannot change your past. Please answer with a button.", replyMarkup = markup(Nil))
   }
 
+
+  onMessage { implicit msg =>
+    val str = msg.text.getOrElse("")
+    if (str == start) {
+      reply("")
+    } else {
+      val arr = CardLoader.generateCardImage(str)
+      //reply()
+      println("converting")
+      //val url = "https://api.telegram.org/bot" + sec.telegramToken + "/sendPhoto";
+      val base64 = Base64.getEncoder.encodeToString(arr)
+      println("done")
+      /*val jspon: String = """{"chat_id:":""" + msg.chat.id + """, "photo": """" + base64 + """"}}"""
+
+      println(url)
+      println(jspon)
+      val result =
+        Http(url)
+          .postData(jspon)
+          .header("Content-Type", "application/json")
+          .header("Charset", "UTF-8")
+          .option(HttpOptions.readTimeout(10000)).asString
+
+      println(result)*/
+
+      // "<img src='data:image/png;base64," + base64 + "'>"
+      reply("Done ")
+    }
+  }
+
+  onCommand(_ => true) { implicit msg =>
+    if (msg.text.getOrElse("") == start) {
+      reply("Welcome. type a name and see a generated card with that name")
+    } else {
+      reply("")
+    }
+  }
+
+  /*
   onMessage { implicit msg =>
     val str = msg.text.getOrElse("")
     if (str == start) {
@@ -82,7 +124,7 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
     } else {
       reply("Please answer with a button.", replyMarkup = markup(Nil))
     }
-  }
+  }*/
 
   val locations = new ConcurrentHashMap[String, Long]()
 
