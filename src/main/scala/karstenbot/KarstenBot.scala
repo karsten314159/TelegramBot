@@ -1,20 +1,21 @@
 package karstenbot
 
-import java.net.URL
-import java.util.Base64
 import java.util.concurrent.ConcurrentHashMap
-
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model._
 import com.bot4s.telegram.api.declarative.Commands
 import com.bot4s.telegram.api.{Polling, TelegramBot}
 import com.bot4s.telegram.clients.ScalajHttpClient
 import com.bot4s.telegram.models._
-import scalaj.http.{Http, HttpOptions}
 
 import scala.util.{Failure, Random, Success, Try}
 
 class KarstenBot(val sec: SecretTrait) extends TelegramBot
   with Polling
   with Commands {
+  implicit val actorSystem: ActorSystem = ActorSystem.create
+
   val client = new ScalajHttpClient(sec.telegramToken)
   val rng = new Random(System.currentTimeMillis)
 
@@ -71,15 +72,49 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
 
   onMessage { implicit msg =>
     val str = msg.text.getOrElse("")
-    if (str == start) {
+    if (str == start || str.length < 1) {
       reply("")
     } else {
-      val arr = CardLoader.generateCardImage(str)
+      val (arr, file) = CardLoader.generateCardImage(str)
       //reply()
-      println("converting")
-      //val url = "https://api.telegram.org/bot" + sec.telegramToken + "/sendPhoto";
-      val base64 = Base64.getEncoder.encodeToString(arr)
-      println("done")
+
+      // TODO: https://core.telegram.org/bots/api#sendchataction
+
+      val url = "https://api.telegram.org/bot" + sec.telegramToken + "/sendPhoto";
+
+      println("sending")
+
+      // https://stackoverflow.com/a/47397586
+      // I had to convert this into strict: which adds Content-Length and tells it is not streaming
+      val httpEntity = HttpEntity(MediaTypes.`multipart/form-data`, arr)
+      val idEnt = HttpEntity(msg.chat.id + "")
+
+      // used Await here to get httpEntity from Future, this might be made better
+      val fileFormData = Multipart.FormData.BodyPart.fromFile("photo", ContentType(MediaTypes.`image/png`), file.toFile)
+      val jsonFormData = Multipart.FormData.BodyPart.Strict("chat_id", idEnt, Map.empty)
+      // Corrected this signature
+      val entity = Multipart.FormData(fileFormData, jsonFormData).toEntity
+      val httpRequest = HttpRequest(
+        method = HttpMethods.POST,
+        uri = Uri(url),
+        entity = entity
+      )
+
+      Http().singleRequest(httpRequest).flatMap { resp =>
+        val strRes = "Done: " + resp.status
+        println(strRes)
+        if (resp.status.isFailure()) {
+          logItem(resp + "", null, "ERROR")
+        }
+
+        // Hmmm, keep or delete? :D
+        // Try(file.toFile.delete)
+
+        reply("")
+      }
+
+      //val base64 = Base64.getEncoder.encodeToString(arr)
+
       /*val jspon: String = """{"chat_id:":""" + msg.chat.id + """, "photo": """" + base64 + """"}}"""
 
       println(url)
@@ -94,7 +129,6 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
       println(result)*/
 
       // "<img src='data:image/png;base64," + base64 + "'>"
-      reply("Done ")
     }
   }
 
@@ -129,13 +163,9 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
   val locations = new ConcurrentHashMap[String, Long]()
 
   def process(text: String)(implicit msg: Message): (String, Seq[String]) = {
-    val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
-    val stm = db.connect.prepareStatement(str)
-    stm.setString(1, msg.chat.firstName.orNull)
-    stm.setString(2, msg.chat.username.orNull)
-    stm.setString(3, text)
-    stm.setLong(4, System.currentTimeMillis)
-    stm.executeUpdate
+    val firstName = msg.chat.firstName.orNull
+    val username = msg.chat.username.orNull
+    logItem(text, firstName, username)
 
     val user = msg.chat.username.getOrElse("")
     val old =
@@ -200,6 +230,16 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
             }
         }
     }
+  }
+
+  private def logItem(text: String, firstName: String, userId: String) = {
+    val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
+    val stm = db.connect.prepareStatement(str)
+    stm.setString(1, firstName)
+    stm.setString(2, userId)
+    stm.setString(3, text)
+    stm.setLong(4, System.currentTimeMillis)
+    stm.executeUpdate
   }
 
   def error(x: Throwable): (String, List[String]) = {

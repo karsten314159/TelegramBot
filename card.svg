@@ -711,7 +711,7 @@
          id="text3402"
          transform="matrix(1.6573392,0,0,1.7151039,-43.026161,-122.52446)"><tspan
            y="30.942675"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:0%;font-family:Palatino;-inkscape-font-specification:Palatino;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:0%;font-family:MagicMedieval;-inkscape-font-specification:MagicMedieval;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
            x="11.630024"
            sodipodi:role="line"
            id="tspan3404">$CardName</tspan></text>
@@ -725,7 +725,7 @@
            id="tspan3655"
            sodipodi:role="line"
            x="98.192162"
-           style="font-style:italic;font-size:8.27250004px;line-height:0%;font-family:Palatino;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#ffffff;-inkscape-font-specification:'Palatino Italic';font-weight:normal;font-stretch:normal;font-variant:normal;"
+           style="font-style:italic;font-size:8.27250004px;line-height:0%;font-family:MagicMedieval;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#ffffff;-inkscape-font-specification:'MagicMedieval Italic';font-weight:normal;font-stretch:normal;font-variant:normal;"
            y="326.33197">$ArtistName</tspan></text>
       <text
          id="text4314"
@@ -737,7 +737,7 @@
            id="tspan4316"
            y="213.63461"
            x="11.630024"
-           style="font-size:13.96150589px;line-height:0%;font-family:Palatino;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;-inkscape-font-specification:Palatino;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           style="font-size:13.96150589px;line-height:0%;font-family:MagicMedieval;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;-inkscape-font-specification:MagicMedieval;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
            sodipodi:role="line">$CardType</tspan></text>
       <text
          x="257.87119"
@@ -747,7 +747,7 @@
          style="font-size:20.92081833px;line-height:0%;font-family:sans-serif;letter-spacing:-0.84298694px;word-spacing:-0.84298694px;fill:#ffffff;stroke:#b3b3b3;stroke-width:0.97979999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="text3963"><tspan
            y="401.54169"
-           style="font-size:23.53874016px;line-height:100%;font-family:Palatino;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;stroke:#b3b3b3;stroke-width:0.97979999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;-inkscape-font-specification:Palatino;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           style="font-size:23.53874016px;line-height:100%;font-family:MagicMedieval;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;stroke:#b3b3b3;stroke-width:0.97979999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;-inkscape-font-specification:MagicMedieval;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
            x="257.44971"
            sodipodi:role="line"
            id="tspan3965">$Field</tspan></text>
@@ -761,7 +761,7 @@
            id="tspan3629"
            y="225.06581"
            x="43.943684"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:111.80000305%;font-family:Palatino;-inkscape-font-specification:Palatino;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:111.80000305%;font-family:MagicMedieval;-inkscape-font-specification:MagicMedieval;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            sodipodi:role="line" /></text>
       <text
          xml:space="preserve"
@@ -771,7 +771,7 @@
          style="font-size:13.96150589px;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter5650-1-8);"
          id="text4704"><tspan
            sodipodi:role="line"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.49006231px;line-height:111.80000305%;font-family:Palatino;-inkscape-font-specification:Palatino;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.49006231px;line-height:111.80000305%;font-family:MagicMedieval;-inkscape-font-specification:MagicMedieval;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
            x="43.693684"
            y="213.63461"
            id="tspan4702">$Stamp</tspan></text>
@@ -783,7 +783,7 @@
          style="line-height:0%;font-family:Georgia;letter-spacing:0px;word-spacing:0px;fill:#ffffff;filter:url(#filter3875-6)"
          id="text5557"><tspan
            y="326.33197"
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.27250004px;line-height:0%;font-family:Palatino;-inkscape-font-specification:'Palatino Italic';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#ffffff"
+           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.27250004px;line-height:0%;font-family:MagicMedieval;-inkscape-font-specification:'MagicMedieval Italic';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#ffffff"
            x="98.692162"
            sodipodi:role="line"
            id="tspan5555">$Number</tspan></text>
@@ -797,11 +797,11 @@
            id="tspan5563"
            sodipodi:role="line"
            x="11.630024"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:100%;font-family:Palatino;-inkscape-font-specification:Palatino;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:100%;font-family:MagicMedieval;-inkscape-font-specification:MagicMedieval;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            y="30.942675">$Description1</tspan><tspan
            sodipodi:role="line"
            x="11.630024"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:100%;font-family:Palatino;-inkscape-font-specification:Palatino;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:100%;font-family:MagicMedieval;-inkscape-font-specification:MagicMedieval;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            y="44.904182"
            id="tspan5567">$Description2</tspan></text>
       <text
@@ -814,7 +814,7 @@
            id="tspan1000"
            sodipodi:role="line"
            x="11.630024"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:0%;font-family:Palatino;-inkscape-font-specification:Palatino;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.96150589px;line-height:0%;font-family:MagicMedieval;-inkscape-font-specification:MagicMedieval;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#b3b3b3;stroke-width:0.58114767;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            y="30.942675">$Costs</tspan></text>
     </g>
     <g

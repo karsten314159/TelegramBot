@@ -1120,7 +1120,7 @@ function generateStringFromSeed(seedVal) {
     function MtgEdition() {
         return [r,
             "bfz", "ogw", "dtk", "frf", "ktk", "ori", "jou",
-            "kld", "aer", "ixa", "rix",
+            "kld", "aer", "xln", "rix",
             "gtc", "dgm", "rtr", "avr", "dka", "isd", "roe", "wwk", "zen",
             "ala", "eve", "shm", "lw",
             "m19", "m15", "m14", "m13", "m12", "m11", "m10", "10e", "9ed", "8ee"

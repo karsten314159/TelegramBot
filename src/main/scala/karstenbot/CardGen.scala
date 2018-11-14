@@ -15,7 +15,6 @@ object CardGen {
   def generate(seed: String): CardData = {
     val js = "cardgen.js"
 
-
     val folder = new File("").getAbsolutePath
     val jsFile = folder + "/" + js
 
@@ -24,18 +23,19 @@ object CardGen {
     val manager = new ScriptEngineManager
     val engine = manager.getEngineByName("javascript")
 
-
     val newCtx = new SimpleScriptContext
     newCtx.setBindings(engine.createBindings, ScriptContext.ENGINE_SCOPE)
-    val funs = engine.eval(script.replace("/*value-here*/", "\"" + seed + "\""), newCtx)
+    val res =
+      engine.eval(
+        script.replace("/*value-here*/", "\"" + seed + "\""),
+        newCtx)
 
-
-    val str = funs.toString
+    val str = res.toString
       .replaceAll("Image>", "ImageUrl>")
       .replaceAll("<NewLine />", "\n")
     val body = Jsoup.parse(str).body
     /*  val reader = XmlFactory.createParserFactory(true).newSAXParser.getXMLReader
-      val res = reader.parse(new InputSource(new StringReader(funs.toString)))
+      val res = reader.parse(new InputSource(new StringReader(res.toString)))
     */
 
     //val imageFormat = "http://magiccards.info/crop/en/%s.jpg"

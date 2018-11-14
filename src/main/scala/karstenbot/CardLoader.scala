@@ -132,7 +132,7 @@ object CardLoader {
     // Create a PNG transcoder
     val transcoder = new PNGTranscoder
 
-    val fac = 1
+    val fac = 1f
     transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, fac * 408f)
     transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, fac * 569f)
 
@@ -156,7 +156,7 @@ object CardLoader {
     generateCardImage("Name")
   }
 
-  def generateCardImage(name: String): Array[Byte] = {
+  def generateCardImage(name: String): (Array[Byte], Path) = {
     //val items = chemists.take(3)
     val folder = new File("").getAbsolutePath
     val cardSvg = folder + "/card.svg"
@@ -170,41 +170,41 @@ object CardLoader {
     println("generating image")
     val len = items.length
     var arr = Array(0: Byte)
-    for ((namedItem, i) <- items.zipWithIndex) {
-      val seed = namedItem.map(_.toInt).sum //fold(0)((a, b) => a + b)
-      val gen = CardGen.generate("c_" + seed)
-      val c = gen.copy(CardName = namedItem)
-      print(".")
-      val con = svgTemplate
-        .replace("$CardName", c.CardName) // Auf "&" in der Entityreferenz muss umgehend der Entityname folgen.
-        .replace("$CardType", c.CardType)
-        .replace("$Field", c.Field)
-        .replace("$Costs", c.Costs)
-        .replace("$Stamp", c.Stamp)
-        .replace("$ArtistName", c.ArtistName)
-        .replace("$ImageHref", c.ImageHref)
-        .replace("$Description1", c.Description1)
-        .replace("$Description2", c.Description2)
-        .replace("$Number", i + "/" + len)
+    val (namedItem, i) = items.zipWithIndex.head
+    val seed = namedItem.map(_.toInt).sum //fold(0)((a, b) => a + b)
+    val gen = CardGen.generate("c_" + seed)
+    val c = gen.copy(CardName = namedItem)
+    print(".")
+    val con = svgTemplate
+      .replace("$CardName", c.CardName) // Auf "&" in der Entityreferenz muss umgehend der Entityname folgen.
+      .replace("$CardType", c.CardType)
+      .replace("$Field", c.Field)
+      .replace("$Costs", c.Costs)
+      .replace("$Stamp", c.Stamp)
+      .replace("$ArtistName", c.ArtistName)
+      .replace("$ImageHref", c.ImageHref)
+      .replace("$Description1", c.Description1)
+      .replace("$Description2", c.Description2)
+      .replace("$Number", i + "/" + len)
 
-      arr = renderSvgToBmp(con)
-      println("done")
+    arr = renderSvgToBmp(con)
+    println("done")
 
-      val ext = "png"
-      val baseFile = res + c.CardName.toLowerCase.replaceAll("[^a-z ]", "")
-      //"svg"
-      val path: Path = Paths.get(baseFile + "." + ext)
-      Files.write(path, arr, StandardOpenOption.CREATE)
-      /*
-      val path2: Path = Paths.get(baseFile + "." + "svg")
-      val b = new BufferedWriter(new FileWriter(path2.toFile))
-      b.write(con, 0, con.length)
-      b.close()
-      */
-    }
+    val ext = "png"
+    val baseFile = res + c.CardName.toLowerCase.replaceAll("[^a-z ]", "")
+    //"svg"
+    val path: Path = Paths.get(baseFile + "." + ext)
+    Files.write(path, arr, StandardOpenOption.CREATE)
+    /*
+    val path2: Path = Paths.get(baseFile + "." + "svg")
+    val b = new BufferedWriter(new FileWriter(path2.toFile))
+    b.write(con, 0, con.length)
+    b.close()
+    */
+
     /*println("")
     println("Done with " + items.length + " items")*/
-    arr
+    arr -> path
   }
 }
 
