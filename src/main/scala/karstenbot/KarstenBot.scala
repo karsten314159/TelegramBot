@@ -1,5 +1,7 @@
 package karstenbot
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
@@ -8,6 +10,8 @@ import com.bot4s.telegram.api.{Polling, TelegramBot}
 import com.bot4s.telegram.clients.ScalajHttpClient
 import com.bot4s.telegram.models._
 
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Random, Try}
 
 class KarstenBot(val sec: SecretTrait) extends TelegramBot
@@ -79,6 +83,7 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
     } else {
       val firstName = msg.chat.firstName.orNull
       val username = msg.chat.username.orNull
+      println("Got " + username + ": " + str)
       logItem(str, firstName, username)
 
       val (arr, file) = CardLoader.generateCardImage(str)
@@ -239,16 +244,18 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
   }*/
 
   def logItem(text: String, firstName: String, userId: String): Try[Unit] = {
-    Try {
-      val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
-      val stm = db.connect.prepareStatement(str)
-      stm.setString(1, firstName)
-      stm.setString(2, userId)
-      stm.setString(3, text)
-      stm.setLong(4, System.currentTimeMillis)
-      stm.executeUpdate
-      ()
-    }
+    val fut =
+      Future(Try {
+        val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
+        val stm = db.connect.prepareStatement(str)
+        stm.setString(1, firstName)
+        stm.setString(2, userId)
+        stm.setString(3, text)
+        stm.setLong(4, System.currentTimeMillis)
+        stm.executeUpdate
+        ()
+      })
+    Await.result(fut, Duration(3, TimeUnit.SECONDS))
   }
 
   def error(x: Throwable): (String, List[String]) = {
