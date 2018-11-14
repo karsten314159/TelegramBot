@@ -3,6 +3,7 @@ package karstenbot
 import java.sql._
 
 import scala.collection.mutable.ListBuffer
+import scala.util.Try
 
 class Database(val s: SecretTrait) {
   def connect: Connection = {
@@ -14,13 +15,12 @@ class Database(val s: SecretTrait) {
     s"""jdbc:mysql://${s.dbHost}:${s.dbPort}/${s.dbName}"""
   }
 
-  def test: Boolean = {
-    var res = false
-    select("show tables;", item => {
-      res = true
-      println(item)
-    })
-    res
+  def test: Try[Unit] = {
+    Try {
+      select("show tables;", item => {
+        println(item)
+      })
+    }
   }
 
   def update(query: String, key: Int = Statement.NO_GENERATED_KEYS): Seq[Any] = {

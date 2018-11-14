@@ -1,6 +1,5 @@
 package karstenbot
 
-import java.util.concurrent.ConcurrentHashMap
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
@@ -9,7 +8,7 @@ import com.bot4s.telegram.api.{Polling, TelegramBot}
 import com.bot4s.telegram.clients.ScalajHttpClient
 import com.bot4s.telegram.models._
 
-import scala.util.{Failure, Random, Success, Try}
+import scala.util.{Failure, Random, Try}
 
 class KarstenBot(val sec: SecretTrait) extends TelegramBot
   with Polling
@@ -22,8 +21,11 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
   val start: String = "/start"
 
   val db = new Database(sec)
-  if (!db.test) {
-    sys.error("DB not accessible: " + db.url)
+  db.test match {
+    case Failure(x) =>
+      println("DB not accessible: " + db.url + ", " + x)
+    case _ => ()
+      println("DB ok: " + db.url)
   }
 
   /*
@@ -75,6 +77,10 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
     if (str == start || str.length < 1) {
       reply("")
     } else {
+      val firstName = msg.chat.firstName.orNull
+      val username = msg.chat.username.orNull
+      logItem(str, firstName, username)
+
       val (arr, file) = CardLoader.generateCardImage(str)
       //reply()
 
@@ -160,7 +166,7 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
     }
   }*/
 
-  val locations = new ConcurrentHashMap[String, Long]()
+  /*val locations = new ConcurrentHashMap[String, Long]()
 
   def process(text: String)(implicit msg: Message): (String, Seq[String]) = {
     val firstName = msg.chat.firstName.orNull
@@ -230,16 +236,19 @@ class KarstenBot(val sec: SecretTrait) extends TelegramBot
             }
         }
     }
-  }
+  }*/
 
-  private def logItem(text: String, firstName: String, userId: String) = {
-    val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
-    val stm = db.connect.prepareStatement(str)
-    stm.setString(1, firstName)
-    stm.setString(2, userId)
-    stm.setString(3, text)
-    stm.setLong(4, System.currentTimeMillis)
-    stm.executeUpdate
+  def logItem(text: String, firstName: String, userId: String): Try[Unit] = {
+    Try {
+      val str = "INSERT INTO `teleLog`(`firstName`, `userId`, `message`, `timestamp`) VALUES (?, ?, ?, ?);"
+      val stm = db.connect.prepareStatement(str)
+      stm.setString(1, firstName)
+      stm.setString(2, userId)
+      stm.setString(3, text)
+      stm.setLong(4, System.currentTimeMillis)
+      stm.executeUpdate
+      ()
+    }
   }
 
   def error(x: Throwable): (String, List[String]) = {
